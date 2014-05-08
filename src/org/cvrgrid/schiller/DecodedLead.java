@@ -58,8 +58,6 @@ public class DecodedLead {
 		return leads;
 	}
 
-	
-	
 	public static DecodedLead[] createFromLeadSet(ArrayList<int[]> leadData) {
 		int index = 0;
 		DecodedLead[] leads = new DecodedLead[leadData.size()];
@@ -105,7 +103,6 @@ public class DecodedLead {
 			return "Unknown Lead";
 		}
 	}
-	
 	
 	public String toString() {
 		return this.name + " (" + this.data.length + " samples)";
