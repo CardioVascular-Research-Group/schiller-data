@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.xml.bind.JAXBException;
 
 public class Test {
-
 	/**
 	 * @param args
 	 */
