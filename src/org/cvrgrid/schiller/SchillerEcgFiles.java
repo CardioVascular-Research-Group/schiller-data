@@ -18,17 +18,39 @@ import org.cvrgrid.schiller.jaxb.beans.ComXiriuzSemaXmlSchillerEDISchillerEDI;
 import org.cvrgrid.schiller.jaxb.beans.Wavedata;
 import org.cvrgrid.schiller.jaxb.beans.Channel;
 
-public final class SchillerEcgFiles {
-	static String samplingRate = "";
+public class SchillerEcgFiles {
+	static String schillerSampRate = "";
 	private SchillerEcgFiles() {
 	}
 
 	private static PreprocessReturn preprocess(JAXBContext context, File input) throws JAXBException, IOException {
 		Unmarshaller reader = context.createUnmarshaller();
 		ComXiriuzSemaXmlSchillerEDISchillerEDI comxiriuzsemaxmlschilleredischilleredi = (ComXiriuzSemaXmlSchillerEDISchillerEDI)reader.unmarshal(input);
+		DecodedLead[] leads = null;
+		PreprocessReturn temp = new PreprocessReturn(comxiriuzsemaxmlschilleredischilleredi, leads, schillerSampRate);
 		
-		PreprocessReturn temp = new PreprocessReturn(comxiriuzsemaxmlschilleredischilleredi, extractLeads(comxiriuzsemaxmlschilleredischilleredi), samplingRate);
-		
+	    ArrayList<int[]> leadData = new ArrayList<int[]>();		
+		List<Wavedata> list =  comxiriuzsemaxmlschilleredischilleredi.getEventdata().getEvent().getWavedata();
+		for (Wavedata wd : list) {
+	    	if (wd.getType().equalsIgnoreCase("ecg_rhythms")){
+		    	temp.setPrepSampleRate(wd.getResolution().getSamplerate().getValue());
+		    	//System.out.println("SCHILLERECG 37: " + temp.getPrepSampleRate());
+		    	List<Channel> channel = wd.getChannel();
+		    	for (Channel subChannel : channel) {
+		    		String channelData = subChannel.getData(); 	
+			    	StringTokenizer tokenizer = new StringTokenizer(channelData, ",");
+		    	    int n = tokenizer.countTokens();
+		    	    int[] list1 = new int[n];
+		    		for (int i = 0; i < n; i++) {
+		    	    	String token = tokenizer.nextToken();
+		    	    	list1[i] = Integer.parseInt(token);
+		    	    }
+	    	    	leadData.add(list1);
+		    	}
+	    	}
+
+	    }
+		temp.setDecodedLeads(DecodedLead.createFromLeadSet(leadData));
 		return temp;
 	}
 	
@@ -48,38 +70,5 @@ public final class SchillerEcgFiles {
         writer.marshal(prepCom.getComXiriuzSemaXmlSchillerEDISchillerEDI(), output);
 	}
 	
-	public static DecodedLead[] extractLeads(ComXiriuzSemaXmlSchillerEDISchillerEDI input) throws IOException {
-
-	    ArrayList<int[]> leadData = new ArrayList<int[]>();		
-		List<Wavedata> list =  input.getEventdata().getEvent().getWavedata();
-		for (Wavedata wd : list) {
-	    	if (wd.getType().equalsIgnoreCase("ecg_rhythms")){
-		    	samplingRate = wd.getResolution().getSamplerate().getValue();
-		    	List<Channel> channel = wd.getChannel();
-		    	for (Channel subChannel : channel) {
-		    		String channelData = subChannel.getData(); 	
-			    	StringTokenizer tokenizer = new StringTokenizer(channelData, ",");
-		    	    int n = tokenizer.countTokens();
-		    	    int[] list1 = new int[n];
-		    		for (int i = 0; i < n; i++) {
-		    	    	String token = tokenizer.nextToken();
-		    	    	list1[i] = Integer.parseInt(token);
-		    	    }
-	    	    	leadData.add(list1);
-		    	}
-	    	}
-	    }
-	    
-		DecodedLead[] leads = DecodedLead.createFromLeadSet(leadData);
-		return leads;
-	}
 	
-	public static DecodedLead[] extractLeads(File input) throws IOException, JAXBException {
-		JAXBContext context = JAXBContext.newInstance("org.cvrgrid.schiller.jaxb.beans");
-		
-		Unmarshaller reader = context.createUnmarshaller();
-		ComXiriuzSemaXmlSchillerEDISchillerEDI comxiriuzsemaxmlschilleredischilleredi = (ComXiriuzSemaXmlSchillerEDISchillerEDI)reader.unmarshal(input);
-		
-		return extractLeads(comxiriuzsemaxmlschilleredischilleredi);
-	}
 }
