@@ -12,6 +12,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.cvrgrid.schiller.PreprocessReturn;
 import org.cvrgrid.schiller.jaxb.beans.ComXiriuzSemaXmlSchillerEDISchillerEDI;
@@ -34,7 +35,6 @@ public class SchillerEcgFiles {
 		for (Wavedata wd : list) {
 	    	if (wd.getType().equalsIgnoreCase("ecg_rhythms")){
 		    	temp.setPrepSampleRate(wd.getResolution().getSamplerate().getValue());
-		    	//System.out.println("SCHILLERECG 37: " + temp.getPrepSampleRate());
 		    	List<Channel> channel = wd.getChannel();
 		    	for (Channel subChannel : channel) {
 		    		String channelData = subChannel.getData(); 	
@@ -48,7 +48,6 @@ public class SchillerEcgFiles {
 	    	    	leadData.add(list1);
 		    	}
 	    	}
-
 	    }
 		temp.setDecodedLeads(DecodedLead.createFromLeadSet(leadData));
 		return temp;
@@ -69,6 +68,4 @@ public class SchillerEcgFiles {
         writer.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         writer.marshal(prepCom.getComXiriuzSemaXmlSchillerEDISchillerEDI(), output);
 	}
-	
-	
 }

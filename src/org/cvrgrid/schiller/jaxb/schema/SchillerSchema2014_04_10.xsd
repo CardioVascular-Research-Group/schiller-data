@@ -73,9 +73,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="birthdate" type="xs:int"/>
-	<xs:element name="case_id">
-		<xs:complexType/>
-	</xs:element>
+	<xs:element name="case_id" type="xs:string"/>
 	<xs:element name="channel">
 		<xs:complexType>
 			<xs:sequence>
@@ -217,9 +215,7 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="job_id">
-		<xs:complexType/>
-	</xs:element>
+	<xs:element name="job_id" type="xs:string"/>
 	<xs:element name="lastname" type="xs:string"/>
 	<xs:element name="location">
 		<xs:complexType>
