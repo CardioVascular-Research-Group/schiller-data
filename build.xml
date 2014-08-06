@@ -8,7 +8,7 @@
 	<property name="portlet-ext" value="${liferay}/portlet-ext"/>
 	<property file="${liferay}/liferay-plugins-sdk-6.1.1/build.${user.name}.properties" />
 	<property name="dependencies" value="${liferay}/projects-dependencies" />
-	<property name="tomcat-axis-lib" value="${liferay}/waveform3/tomcat/webapps/axis2/WEB-INF/lib"/>
+	<property name="tomcat-axis-lib" value="${app.server.deploy.dir}/axis2/WEB-INF/lib"/>
 	
 	<target name="clean">
 		<echo>Clean the temporary area</echo>
