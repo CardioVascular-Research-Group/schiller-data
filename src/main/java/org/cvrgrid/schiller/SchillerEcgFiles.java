@@ -3,7 +3,6 @@ package org.cvrgrid.schiller;
 //import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-//import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -12,12 +11,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.cvrgrid.schiller.PreprocessReturn;
+import org.cvrgrid.schiller.jaxb.beans.Channel;
 import org.cvrgrid.schiller.jaxb.beans.ComXiriuzSemaXmlSchillerEDISchillerEDI;
 import org.cvrgrid.schiller.jaxb.beans.Wavedata;
-import org.cvrgrid.schiller.jaxb.beans.Channel;
+//import java.io.InputStream;
 
 public class SchillerEcgFiles {
 	static String schillerSampRate = "";
@@ -30,13 +28,16 @@ public class SchillerEcgFiles {
 		DecodedLead[] leads = null;
 		PreprocessReturn temp = new PreprocessReturn(comxiriuzsemaxmlschilleredischilleredi, leads, schillerSampRate);
 		
-	    ArrayList<int[]> leadData = new ArrayList<int[]>();		
+	    ArrayList<int[]> leadData = new ArrayList<int[]>();
+	    ArrayList<String> leadNames = null;
 		List<Wavedata> list =  comxiriuzsemaxmlschilleredischilleredi.getEventdata().getEvent().getWavedata();
 		for (Wavedata wd : list) {
 	    	if (wd.getType().equalsIgnoreCase("ecg_rhythms")){
 		    	temp.setPrepSampleRate(wd.getResolution().getSamplerate().getValue());
+		    	leadNames = new ArrayList<String>();
 		    	List<Channel> channel = wd.getChannel();
 		    	for (Channel subChannel : channel) {
+		    		leadNames.add(subChannel.getName().toUpperCase());
 		    		String channelData = subChannel.getData(); 	
 			    	StringTokenizer tokenizer = new StringTokenizer(channelData, ",");
 		    	    int n = tokenizer.countTokens();
@@ -50,6 +51,7 @@ public class SchillerEcgFiles {
 	    	}
 	    }
 		temp.setDecodedLeads(DecodedLead.createFromLeadSet(leadData));
+		temp.setLeadNames(leadNames);
 		return temp;
 	}
 	

@@ -1,5 +1,7 @@
 package org.cvrgrid.schiller;
 
+import java.util.List;
+
 import org.cvrgrid.schiller.jaxb.beans.ComXiriuzSemaXmlSchillerEDISchillerEDI;
 
 public class PreprocessReturn {
@@ -7,6 +9,7 @@ public class PreprocessReturn {
 	private ComXiriuzSemaXmlSchillerEDISchillerEDI comXiriuzSemaXmlSchillerEDISchillerEDI;
 	private DecodedLead[] decodedLeads;
 	private String prepSampleRate;
+	private List<String> leadNames;
 	
 	public PreprocessReturn(ComXiriuzSemaXmlSchillerEDISchillerEDI comXiriuzSemaXmlSchillerEDISchillerEDI, DecodedLead[] decodedLeads, String prepSampleRate) {
 		super();
@@ -37,6 +40,14 @@ public class PreprocessReturn {
 	
 	public void setPrepSampleRate(String prepSampleRate) {
 		this.prepSampleRate = prepSampleRate;
+	}
+
+	public List<String> getLeadNames() {
+		return leadNames;
+	}
+
+	public void setLeadNames(List<String> leadNames) {
+		this.leadNames = leadNames;
 	}
 	
 }
