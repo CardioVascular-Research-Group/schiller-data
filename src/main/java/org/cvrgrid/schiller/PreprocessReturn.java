@@ -12,7 +12,6 @@ public class PreprocessReturn {
 	private List<String> leadNames;
 	
 	public PreprocessReturn(ComXiriuzSemaXmlSchillerEDISchillerEDI comXiriuzSemaXmlSchillerEDISchillerEDI, DecodedLead[] decodedLeads, String prepSampleRate) {
-		super();
 		this.comXiriuzSemaXmlSchillerEDISchillerEDI = comXiriuzSemaXmlSchillerEDISchillerEDI;
 		this.decodedLeads = decodedLeads;
 		this.prepSampleRate = prepSampleRate;
@@ -49,5 +48,11 @@ public class PreprocessReturn {
 	public void setLeadNames(List<String> leadNames) {
 		this.leadNames = leadNames;
 	}
-	
+	public List<String> getLeadNames() {
+		return leadNames;
+	}
+
+	public void setLeadNames(List<String> leadNames) {
+		this.leadNames = leadNames;
+	}
 }
